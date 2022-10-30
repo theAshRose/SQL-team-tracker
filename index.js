@@ -1,22 +1,30 @@
+/////imported node things////////
 const mysql = require('mysql2');
 const cTable = require('console.table');
-const inquirer = require("inquirer")
+const inquirer = require("inquirer");
+////////////////my modules//////////////////
+const addemployee = require("./utils/addEmployee")
 
 
-
-console.table("consoles a table") //
 
 const initialPrompt = [{
-    name: "first question",
+    name: "question1",
     message: "Please select something",
     type: "list",
-    choices: ["Add Employee",
+    choices: [
+        "Add Employee",
         "Update Employee Role",
         "View All Roles",
         "Add Role",
         "View All Departments",
         "Add Department",
-        "Quit"]
+        "Quit",
+        // "Update Employee Manager",
+        // "View Employees by Manager",
+        // "Remove Depot Roles",
+        // "Remove Depot Employees",
+        // "View Total Employee Budget" 
+    ]
 }]
 
 const db = mysql.createConnection(
@@ -31,25 +39,16 @@ const db = mysql.createConnection(
 
 
 function prompt1() {
-inquirer.prompt(initialPrompt).then(data => {
-
-    //do a foreach loop connecting a boolean to the matching module
-
-
-
-    // db.query('SELECT * FROM depot_employee', function (err, res) {
-    //     console.log(res);
-    // });
-
+inquirer.prompt(initialPrompt).then(userInput => {
+    let promptVal = Object.values(userInput) //extracting value from user input
+    let babyFunction = promptVal.toString().toLowerCase().replace(/\s/g, '')+"()"
+    eval(babyFunction);
 })
 }
 
-
 function init() {
-    db.query('SELECT * FROM depot_employee', function (err, res) {
-        console.table(res);
-        console.log(res);
-    });
     prompt1()
 };
 init()
+
+module.exports = db, prompt1;
