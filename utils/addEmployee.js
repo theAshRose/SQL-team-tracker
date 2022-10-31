@@ -14,9 +14,15 @@ const db = mysql.createConnection(
 );
 
 const addEmployeePrompt = [{
-    name: "role_id",
+    name: "role",
     message: "enter employee role",
-    type: "input"
+    choices: [
+        "Manager",
+        "Cashier",
+        "Hardware Specialist",
+        "Janitor",
+        "Gardener"
+    ]
 }, {
     name: "first_name",
     message: "enter employee first name",
@@ -26,9 +32,13 @@ const addEmployeePrompt = [{
     message: "enter employee last name",
     type: "input"
 }, {
-    name: "manager_id",
+    name: "manager",
     message: "enter employee's manager(if any)'",
-    type: "input"
+    type: "list",
+    choices: [
+        "none",
+        "Bill Lumbergh"
+    ]
 },
 ];
 
@@ -38,25 +48,24 @@ function addemployee() {
     let finalInput = [];
     inquirer.prompt(addEmployeePrompt).then(userInput => {
         finalInput.push(userInput)
-        let roleID = finalInput.role_id; console.log(roleID+"DEFINED")
-        db.query('SELECT role_id FROM depot_role WHERE title = ?', roleID, function (err, res) {
-            console.table(res+"table1");
-            console.log(roleID+"roleID")
-            let managerID = finalInput.manager_id; console.log(managerID)
-            db.query('SELECT manager_id FROM depot_role WHERE title = ?', managerID, function (err, res) {
-                console.table(res+"table2");
-                console.log(roleID+"managerID")
-                db.query('INSERT INTO depot_employee (first_name, last_name, role_id, manager_id) VALUES ('
-                    +finalInput.first_name+', '+finalInput.last_name+', '+roleID+', '+ managerID +');',
-                    function (err, res) {
-                        db.query('SELECT * FROM depot_employee', function(err, res){console.table(res)})
-                        console.table(res+"table");
-                        console.log(res+"array")
-                        prompt1()
-                    });
-            })
-        })
+        // let roleID = finalInput.role_id; console.log(roleID+"DEFINED")
+        // db.query('SELECT role_id FROM depot_role WHERE title = ?', roleID, function (err, res) {
+        //     console.table(res+"table1");
+        //     console.log(roleID+"roleID")
+        //     let managerID = finalInput.manager_id; console.log(managerID)
+        //     db.query('SELECT manager_id FROM depot_role WHERE title = ?', managerID, function (err, res) {
+        //         console.table(res+"table2");
+        //         console.log(roleID+"managerID")
+        db.query('INSERT INTO depot_employee (first_name, last_name, manager_id) VALUES ('
+            + finalInput.first_name + ', ' + finalInput.last_name + ', ' +1+'); INSERT INTO depot_role (title) VALUES ('+finalInput.role+') ',
+            function (err, res) {
+                db.query('SELECT * FROM depot_employee', function (err, res) { console.table(res) })
+                console.table(res + "table");
+                console.log(res + "array")
+                prompt1()
+            });
     })
-} 
+}
+
 
 module.exports = addemployee;
