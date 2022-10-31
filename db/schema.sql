@@ -17,11 +17,11 @@ CREATE TABLE depot_role (
 );
 
 CREATE TABLE depot_employee (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(30),
-    last_name VARCHAR(30),
-    role_id INT,
-    FOREIGN KEY (role_id) REFERENCES depot_role(id),
-    manager_id INT NULL,
-    FOREIGN KEY (manager_id) REFERENCES depot_employee(id)
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(30),
+  last_name VARCHAR(30),
+  role_id INT,
+  FOREIGN KEY (role_id) REFERENCES depot_role(id),
+  manager_id INT NULL,
+  FOREIGN KEY (manager_id) REFERENCES depot_employee(id)
 );

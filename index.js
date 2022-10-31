@@ -9,7 +9,7 @@ const addemployee = require("./utils/addEmployee")
 
 const initialPrompt = [{
     name: "question1",
-    message: "Please select something",
+    message: "What would you like to do?",
     type: "list",
     choices: [
         "Add Employee",
@@ -37,7 +37,6 @@ const db = mysql.createConnection(
     console.log(`Accessing depot_db...`)
 );
 
-
 function prompt1() {
 inquirer.prompt(initialPrompt).then(userInput => {
     let promptVal = Object.values(userInput) //extracting value from user input
@@ -48,7 +47,7 @@ inquirer.prompt(initialPrompt).then(userInput => {
 
 function init() {
     prompt1()
-};
+}
 init()
 
-module.exports = db, prompt1;
+module.exports = prompt1;
