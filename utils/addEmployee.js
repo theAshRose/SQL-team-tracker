@@ -16,6 +16,7 @@ const db = mysql.createConnection(
 const addEmployeePrompt = [{
     name: "role",
     message: "enter employee role",
+    type: "list",
     choices: [
         "Manager",
         "Cashier",
@@ -37,35 +38,29 @@ const addEmployeePrompt = [{
     type: "list",
     choices: [
         "none",
-        "Bill Lumbergh"
+        "Lumbergh",
+        "McRat"
     ]
 },
 ];
 
-
 function addemployee() {
     const prompt1 = require("../index")
-    let finalInput = [];
     inquirer.prompt(addEmployeePrompt).then(userInput => {
-        finalInput.push(userInput)
-        // let roleID = finalInput.role_id; console.log(roleID+"DEFINED")
-        // db.query('SELECT role_id FROM depot_role WHERE title = ?', roleID, function (err, res) {
-        //     console.table(res+"table1");
-        //     console.log(roleID+"roleID")
-        //     let managerID = finalInput.manager_id; console.log(managerID)
-        //     db.query('SELECT manager_id FROM depot_role WHERE title = ?', managerID, function (err, res) {
-        //         console.table(res+"table2");
-        //         console.log(roleID+"managerID")
-        db.query('INSERT INTO depot_employee (first_name, last_name, manager_id) VALUES ('
-            + finalInput.first_name + ', ' + finalInput.last_name + ', ' +1+'); INSERT INTO depot_role (title) VALUES ('+finalInput.role+') ',
-            function (err, res) {
-                db.query('SELECT * FROM depot_employee', function (err, res) { console.table(res) })
-                console.table(res + "table");
-                console.log(res + "array")
-                prompt1()
-            });
+        db.query(`SELECT * FROM depot_role WHERE title='${userInput.role}'`, function (err, res) {
+            let role = res[0].id
+            console.log(res + "what im looking for")
+            db.query(`SELECT id FROM depot_employee WHERE last_name='${userInput.manager}'`, function (err, res) {
+                let manager = res[0].id
+                db.query(`INSERT INTO depot_employee (first_name, last_name, role_id, manager_id) VALUES ('${userInput.first_name}', '${userInput.last_name}', ${role}, ${manager});`,
+                    function (err, res) {
+                        db.query('SELECT * FROM depot_employee', function (err, res) { console.table(res) })
+                        console.table(res + "table");
+                        console.log(res + "array")
+                    }); prompt1()
+            })
+        })
     })
 }
-
 
 module.exports = addemployee;
