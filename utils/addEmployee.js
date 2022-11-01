@@ -17,13 +17,7 @@ const addEmployeePrompt = [{
     name: "role",
     message: "enter employee role",
     type: "list",
-    choices: [
-        "Manager",
-        "Cashier",
-        "Hardware Specialist",
-        "Janitor",
-        "Gardener"
-    ]
+    choices: []
 }, {
     name: "first_name",
     message: "enter employee first name",
@@ -38,29 +32,44 @@ const addEmployeePrompt = [{
     type: "list",
     choices: [
         "none",
-        "Lumbergh",
-        "McRat"
     ]
 },
 ];
 
 function addemployee() {
     const prompt1 = require("../index")
-    inquirer.prompt(addEmployeePrompt).then(userInput => {
-        db.query(`SELECT * FROM depot_role WHERE title='${userInput.role}'`, function (err, res) {
-            let role = res[0].id
-            console.log(res + "what im looking for")
-            db.query(`SELECT id FROM depot_employee WHERE last_name='${userInput.manager}'`, function (err, res) {
-                let manager = res[0].id
-                db.query(`INSERT INTO depot_employee (first_name, last_name, role_id, manager_id) VALUES ('${userInput.first_name}', '${userInput.last_name}', ${role}, ${manager});`,
-                    function (err, res) {
-                        db.query('SELECT * FROM depot_employee', function (err, res) { console.table(res) })
-                        console.table(res + "table");
-                        console.log(res + "array")
-                    }); prompt1()
+    db.query("SELECT title AS role FROM depot_role;", function (err, res) {
+        let namesArr = [];
+        for (x = 0; x < res.length; x++) {
+            namesArr.push(res[x].role)
+        } addEmployeePrompt[0].choices = namesArr
+        db.query("SELECT CONCAT(first_name, ' ', last_name) AS managers FROM depot_employee WHERE manager_id IS NULL", function (err, res) {
+            let namesArr = [];
+            for (x = 0; x < res.length; x++) {
+                namesArr.push(res[x].managers)
+            } namesArr.push("NONE"); addEmployeePrompt[3].choices = namesArr
+            inquirer.prompt(addEmployeePrompt).then(userInput => {
+                console.log(`${userInput.first_name} ${userInput.last_name} has been added to the database!`)
+                db.query(`SELECT * FROM depot_role WHERE title='${userInput.role}'`, function (err, res) {
+                    let role = res[0].id
+                    db.query(`SELECT * FROM depot_employee WHERE CONCAT(first_name, ' ', last_name)='${userInput.manager}'`, function (err, res) {
+                        let newInput = userInput
+                        if (userInput.manager === "NONE") {
+                            let manager = null
+                            db.query(`INSERT INTO depot_employee (first_name, last_name, role_id, manager_id) VALUES ('${userInput.first_name}', '${userInput.last_name}', ${role}, ${manager})`,
+                                function (err, res) {
+                                }); prompt1()
+                        } else {
+                            let manager = res[0].id
+                            db.query(`INSERT INTO depot_employee (first_name, last_name, role_id, manager_id) VALUES ('${userInput.first_name}', '${userInput.last_name}', ${role}, ${manager})`,
+                                function (err, res) {
+                                }); prompt1()
+                        }
+                    })
+                })
             })
         })
     })
 }
-
+// if (userInput.manager === "NONE") { let manager = null } else { let manager = res[0].id }
 module.exports = addemployee;
