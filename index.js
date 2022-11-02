@@ -26,13 +26,13 @@ const initialPrompt = [{
         "View All Employees",
         "View All Roles",
         "View All Departments",
-        "Add Employee",
-        "Add Department",
-        "Update Employee Role",
-        "Add Role",
-        "Quit",
         "View Total Department Budget",
         "View Employees by Manager",
+        "Add Employee",
+        "Add Department",
+        "Add Role",
+        "Update Employee Role",
+        "Quit", 
     ]
 }]
 
