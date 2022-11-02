@@ -2,8 +2,6 @@ const mysql = require('mysql2');
 const cTable = require('console.table');
 const inquirer = require("inquirer");
 
-
-
 const db = mysql.createConnection(
     {
         host: 'localhost',
@@ -31,7 +29,7 @@ function updateemployeerole() {
         let namesArr = [];
         for (x = 0; x < res.length; x++) {
             namesArr.push(res[x].fullname)
-        } updateRolePrompt[0].choices = namesArr      
+        } updateRolePrompt[0].choices = namesArr
         db.query("SELECT title AS roles FROM depot_role", function (err, res) {
             let rolesArr = [];
             for (x = 0; x < res.length; x++) {
@@ -42,13 +40,18 @@ function updateemployeerole() {
                 console.log(userInput)// result { employee: 'Bill Lumbergh', role: 'Garden Manager' }
                 let splitter = userInput.employee
                 let theSplitted = splitter.split(' ')
-                let sliceNsplit = theSplitted.slice(-1)              
+                let sliceNsplit = theSplitted.slice(-1)
                 db.query(`SELECT id FROM depot_role WHERE title='${userInput.role}'`, function (err, res) {
-                    let roleID = res[0].id                   
+                    let roleID = res[0].id
                     db.query(`UPDATE depot_employee SET role_id=${roleID} WHERE last_name='${sliceNsplit}'`, function (err, res) {
-                        console.log("Updated role! "+userInput.employee+" is now a "+userInput.role)
-                        prompt1()
-                     })
+                        console.log("Updated role! " + userInput.employee + " is now a " + userInput.role)
+                        db.query(`SELECT * FROM depot_employee WHERE last_name='${sliceNsplit}'`, function (err, res) {                            
+                                if (res[0].role_id === 1) {
+                                    db.query(`UPDATE depot_employee SET manager_id=NULL WHERE last_name='${sliceNsplit}'`, function (err, res) {
+                                    }) 
+                                }                            
+                        }); prompt1()
+                    })
                 })
             })
         })
