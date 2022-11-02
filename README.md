@@ -13,7 +13,7 @@ Type 'node index.js' into your cammand line to get started. For help, refer to t
 
 ## Screenshot of app result
 
-![screenshot]([https://cdn.discordapp.com/attachments/408481106040717322/1037238644085379113/unknown.png])
+![screenshot]([https://media.discordapp.net/attachments/408481106040717322/1037238644085379113/unknown.png])
 
 ## the Code!
 Here we are showcasing the function which calls all of our mySQL, prompts and functions to trigger! Most people did a series of 'if' statements or some sort of switch case. What was done here is the user can select from choices in the initial prompt. Their choice gets broken down to lower case, the spaces all removed and then parenthesis added to the end. That string is then executed as a function using the eval() method. Therefore the rest of our functions which trigger other prompts and mySQL are all in lower case. This is unconventional but i thought it was fun and creative. 
