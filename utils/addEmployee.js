@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
 const cTable = require('console.table');
 const inquirer = require("inquirer");
-const prompt1 = require("../index")
+
 
 const db = mysql.createConnection(
     {
@@ -10,7 +10,6 @@ const db = mysql.createConnection(
         password: 'HatsuneMiku',
         database: 'depot_db'
     },
-    console.log(`Accessing depot_db...`)
 );
 
 const addEmployeePrompt = [{
@@ -35,9 +34,9 @@ const addEmployeePrompt = [{
     ]
 },
 ];
-
+//i went with nested db.queries as promisifying felt too tenuous 
 function addemployee() {
-    const prompt1 = require("../index")
+    const prompt1 = require("../index") //if we do not import our prompt1 function in here we have to way of calling it down the line
     db.query("SELECT title AS role FROM depot_role;", function (err, res) {
         let namesArr = [];
         for (x = 0; x < res.length; x++) {
@@ -45,7 +44,7 @@ function addemployee() {
         } addEmployeePrompt[0].choices = namesArr
         db.query("SELECT CONCAT(first_name, ' ', last_name) AS managers FROM depot_employee WHERE manager_id IS NULL", function (err, res) {
             let namesArr = [];
-            for (x = 0; x < res.length; x++) {
+            for (x = 0; x < res.length; x++) { //two for loops are needed to pull values from mySQL db and push them into our prompt array
                 namesArr.push(res[x].managers)
             } namesArr.push("NONE"); addEmployeePrompt[3].choices = namesArr
             inquirer.prompt(addEmployeePrompt).then(userInput => {
@@ -53,8 +52,7 @@ function addemployee() {
                 db.query(`SELECT * FROM depot_role WHERE title='${userInput.role}'`, function (err, res) {
                     let role = res[0].id
                     db.query(`SELECT * FROM depot_employee WHERE CONCAT(first_name, ' ', last_name)='${userInput.manager}'`, function (err, res) {
-                        let newInput = userInput
-                        if (userInput.manager === "NONE") {
+                        if (userInput.manager === "NONE") { ///if statements in case the new employee is a manager certain steps must be taken
                             let manager = null
                             db.query(`INSERT INTO depot_employee (first_name, last_name, role_id, manager_id) VALUES ('${userInput.first_name}', '${userInput.last_name}', ${role}, ${manager})`,
                                 function (err, res) {
@@ -71,5 +69,4 @@ function addemployee() {
         })
     })
 }
-// if (userInput.manager === "NONE") { let manager = null } else { let manager = res[0].id }
 module.exports = addemployee;

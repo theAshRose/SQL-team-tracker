@@ -19,7 +19,7 @@ VALUES
 INSERT INTO depot_employee (first_name, last_name, role_id, manager_id)
 VALUES 
 ("Bill", "Lumbergh", 1, null),
-("Adrianne", "McRat", 6, null),
+("Adrianne", "McRat", 2, 1),
 ("Jeffy", "Smith", 3, 1),
 ("Roger", "Adams", 3, 1),
 ("Jorge", "Rivera", 5, 1),

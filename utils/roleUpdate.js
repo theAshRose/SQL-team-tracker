@@ -27,7 +27,7 @@ const updateRolePrompt = [{
 function updateemployeerole() {
     db.query("SELECT CONCAT(first_name, ' ', last_name) AS fullname FROM depot_employee", function (err, res) {
         let namesArr = [];
-        for (x = 0; x < res.length; x++) {
+        for (x = 0; x < res.length; x++) { //for loop iterating over responses to push results into prompt array
             namesArr.push(res[x].fullname)
         } updateRolePrompt[0].choices = namesArr
         db.query("SELECT title AS roles FROM depot_role", function (err, res) {
@@ -37,16 +37,15 @@ function updateemployeerole() {
             } updateRolePrompt[1].choices = rolesArr
             inquirer.prompt(updateRolePrompt).then(userInput => {
                 const prompt1 = require("../index")
-                console.log(userInput)// result { employee: 'Bill Lumbergh', role: 'Garden Manager' }
-                let splitter = userInput.employee
+                let splitter = userInput.employee 
                 let theSplitted = splitter.split(' ')
-                let sliceNsplit = theSplitted.slice(-1)
+                let sliceNsplit = theSplitted.slice(-1) //fancy split sequence here to pull last name from results
                 db.query(`SELECT id FROM depot_role WHERE title='${userInput.role}'`, function (err, res) {
                     let roleID = res[0].id
                     db.query(`UPDATE depot_employee SET role_id=${roleID} WHERE last_name='${sliceNsplit}'`, function (err, res) {
                         console.log("Updated role! " + userInput.employee + " is now a " + userInput.role)
                         db.query(`SELECT * FROM depot_employee WHERE last_name='${sliceNsplit}'`, function (err, res) {                            
-                                if (res[0].role_id === 1) {
+                                if (res[0].role_id === 1) { //makes it so if manager is selected their manager ID will be appropriately listed as NULL
                                     db.query(`UPDATE depot_employee SET manager_id=NULL WHERE last_name='${sliceNsplit}'`, function (err, res) {
                                     }) 
                                 }                            

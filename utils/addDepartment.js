@@ -9,7 +9,6 @@ const db = mysql.createConnection(
         password: 'HatsuneMiku',
         database: 'depot_db'
     },
-    console.log(`Accessing depot_db...`)
 );
 
 const addDepartmentPrompt = [
@@ -20,7 +19,7 @@ const addDepartmentPrompt = [
     }
 ];
 
-function adddepartment() {
+function adddepartment() {//simple insert into query attatched to prompt
     inquirer.prompt(addDepartmentPrompt).then(userInput => {
         const prompt1 = require('../index');
         db.query(`INSERT INTO depot (name) VALUES ('${userInput.name}')`, function (err, res) {

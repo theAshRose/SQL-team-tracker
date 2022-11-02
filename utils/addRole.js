@@ -32,15 +32,15 @@ const addRolePrompt = [
 ]
 
 function addrole() {
-    db.query('SELECT depot.name FROM depot', function (err, res) {
+    db.query('SELECT depot.name FROM depot', function (err, res) {//using a for loop to populate prompt object
         let deptArray = []
         for (x = 0; x < res.length; x++) {
             deptArray.push(res[x].name)
         } addRolePrompt[2].choices = deptArray
         inquirer.prompt(addRolePrompt).then(userInput => {
             const prompt1 = require('../index');
-            db.query(`SELECT * FROM depot WHERE name='${userInput.name}'`, function (err, res) {
-                let depotID = res[0].id
+            db.query(`SELECT * FROM depot WHERE name='${userInput.name}'`, function (err, res) { 
+                let depotID = res[0].id //we pull userInput and use depotID to insert into below
                 db.query(`INSERT INTO depot_role (title, salary, depot_id) VALUES ('${userInput.title}', '${userInput.salary}', '${depotID}')`, function (err, res) {
                     console.log(`'${userInput.title}' has been added to roles in the database!`)
                     prompt1()
