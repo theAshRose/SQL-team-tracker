@@ -5,6 +5,8 @@
 Here we have a wonderful, wonderful managerial tool. [Here is a link to the application](https://thedomconrad.github.io/employee-sum/)
 With this tool one may store and organize employees, roles and departments. You may use this command prompt program to edit them as well. Enjoy! 
 
+NOTE: If you will take a look at the code you will notice our functions are NOT camelCase. This is done by design - read more about it in the code snippet below!
+
 ## How to use
 
 Type 'node index.js' into your cammand line to get started. For help, refer to this short and sweet [video](https://youtu.be/rEool94YysA). You may view employees, departments and roles in a number of different ways - as well as add them! Functionality to delete is intended to be added but for now this MVP works sweetly and with no bugs :).
